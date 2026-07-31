@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCBSS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0b0d10;
+            color: #c5cdd8;
+            font-family: 'Courier New', 'Lucida Console', monospace;
+            font-size: 15px;
+            line-height: 1.6;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .site {
+            max-width: 880px;
+            width: 100%;
+            border-top: 3px solid #2a3a4a;
+            border-bottom: 3px solid #2a3a4a;
+            padding: 28px 0 20px;
+        }
+
+        /* ----- 标题行 ----- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #1e2630;
+            padding-bottom: 14px;
+            margin-bottom: 22px;
+        }
+        .logo {
+            font-size: 26px;
+            font-weight: 700;
+            color: #e0e8f0;
+            letter-spacing: 1px;
+        }
+        .logo span {
+            color: #3f8eff;
+        }
+        .nav {
+            font-size: 14px;
+            display: flex;
+            gap: 24px;
+        }
+        .nav a {
+            color: #7a8a9e;
+            text-decoration: none;
+            border-bottom: 1px dotted transparent;
+        }
+        .nav a:hover {
+            color: #d0d8e0;
+            border-bottom-color: #3f8eff;
+        }
+
+        /* ----- 核心信息 ----- */
+        .hero {
+            margin-bottom: 28px;
+        }
+        .hero h1 {
+            font-size: 30px;
+            font-weight: 600;
+            color: #e0e8f0;
+            letter-spacing: -0.5px;
+        }
+        .hero h1 span {
+            color: #3f8eff;
+        }
+        .hero .sub {
+            color: #7a8a9e;
+            font-size: 15px;
+            margin-top: 2px;
+        }
+        .hero .badge {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 2px 14px;
+            border: 1px solid #2a3a4a;
+            font-size: 13px;
+            color: #6a7a8e;
+        }
+
+        /* ----- 公告（无装饰，纯文字） ----- */
+        .notice {
+            background: #11161e;
+            padding: 14px 18px;
+            margin: 18px 0 22px;
+            border-left: 4px solid #3f8eff;
+            border-top: 1px solid #1a2230;
+            border-right: 1px solid #1a2230;
+            border-bottom: 1px solid #1a2230;
+        }
+        .notice .label {
+            color: #3f8eff;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .notice ul {
+            list-style: none;
+            margin-top: 6px;
+        }
+        .notice li {
+            font-size: 14px;
+            color: #a0aab8;
+            padding: 2px 0;
+        }
+        .notice li::before {
+            content: "[>] ";
+            color: #3f8eff;
+        }
+
+        /* ----- 数据行（无图标，纯数字） ----- */
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px 50px;
+            border-top: 1px solid #1a2230;
+            border-bottom: 1px solid #1a2230;
+            padding: 18px 0;
+            margin-bottom: 24px;
+        }
+        .stat-item .num {
+            font-size: 24px;
+            font-weight: 600;
+            color: #3f8eff;
+        }
+        .stat-item .desc {
+            font-size: 13px;
+            color: #6a7a8e;
+            margin-left: 6px;
+        }
+
+        /* ----- 功能区（纯文本卡片） ----- */
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #c5cdd8;
+            margin-bottom: 14px;
+            border-bottom: 1px solid #1a2230;
+            padding-bottom: 4px;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+        .feature-item {
+            background: #11161e;
+            padding: 12px 16px 10px;
+            border: 1px solid #1a2230;
+        }
+        .feature-item .name {
+            font-weight: 600;
+            font-size: 15px;
+            color: #d0d8e0;
+        }
+        .feature-item .desc {
+            font-size: 13px;
+            color: #6a7a8e;
+            margin-top: 2px;
+        }
+
+        /* ----- 下载区（无按钮，只写群号） ----- */
+        .download {
+            background: #11161e;
+            padding: 18px 20px;
+            border: 1px solid #1a2230;
+            margin: 20px 0 18px;
+            text-align: center;
+        }
+        .download .q {
+            font-size: 20px;
+            font-weight: 600;
+            color: #3f8eff;
+            letter-spacing: 1px;
+        }
+        .download .hint {
+            font-size: 13px;
+            color: #5a6a7e;
+            margin-top: 4px;
+        }
+
+        /* ----- 页脚 ----- */
+        .footer {
+            border-top: 1px solid #1a2230;
+            padding-top: 16px;
+            margin-top: 6px;
+            font-size: 13px;
+            color: #4a5a6e;
+            text-align: center;
+        }
+        .footer a {
+            color: #4a5a6e;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            color: #7a8a9e;
+        }
+
+        /* ----- 移动端微调 ----- */
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            .hero h1 {
+                font-size: 24px;
+            }
+            .stats {
+                gap: 16px 30px;
+            }
+            .stat-item .num {
+                font-size: 20px;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 420px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="site">
+
+    <!-- 顶栏 -->
+    <div class="header">
+        <div class="logo">FCBSS<span>.</span></div>
+        <div class="nav">
+            <a href="#v4a">V4A</a>
+            <a href="#v4b">V4B</a>
+            <a href="https://qm.qq.com/q/1092973171">群</a>
+        </div>
+    </div>
+
+    <!-- 主标题 -->
+    <div class="hero">
+        <h1>轻量 · 本地 · <span>离线安全</span></h1>
+        <div class="sub">Windows 安全辅助工具 · 全盘扫描 · 行为监控</div>
+        <div class="badge">完整包 &lt; 5 MB</div>
+    </div>
+
+    <!-- 公告 V4B -->
+    <div class="notice">
+        <div class="label">▸ V4B 预计更新</div>
+        <ul>
+            <li>脚本内容检测（JS / VBS / PS1 / BAT / CMD）</li>
+            <li>混淆脚本识别（Base64 / 编码 / 高熵）</li>
+            <li>一键标记隔离（改名 .fcbss）</li>
+            <li>右键菜单快速扫描</li>
+            <li>紧急模式（FCBSS OS）</li>
+            <li>全屏接管与断网应急</li>
+        </ul>
+    </div>
+
+    <!-- 数据 -->
+    <div class="stats">
+        <div class="stat-item">
+            <span class="num">&lt;5</span>
+            <span class="desc">完整包 MB</span>
+        </div>
+        <div class="stat-item">
+            <span class="num">2</span>
+            <span class="desc">主程序 MB</span>
+        </div>
+        <div class="stat-item">
+            <span class="num">35 万+</span>
+            <span class="desc">MD5 特征</span>
+        </div>
+        <div class="stat-item">
+            <span class="num">XP</span>
+            <span class="desc">最低系统</span>
+        </div>
+    </div>
+
+    <!-- V4A 已实现 -->
+    <div class="section-title" id="v4a">▸ V4A 已实现</div>
+    <div class="feature-grid">
+        <div class="feature-item">
+            <div class="name">全盘 / 单文件扫描</div>
+            <div class="desc">基于 MD5 特征库，离线匹配</div>
+        </div>
+        <div class="feature-item">
+            <div class="name">行为监控</div>
+            <div class="desc">桌面 + 下载目录实时监测</div>
+        </div>
+        <div class="feature-item">
+            <div class="name">一键处置</div>
+            <div class="desc">威胁文件删除或标记</div>
+        </div>
+        <div class="feature-item">
+            <div class="name">命令行交互</div>
+            <div class="desc">轻量控制台操作，低资源占用</div>
+        </div>
+        <div class="feature-item">
+            <div class="name">离线运行</div>
+            <div class="desc">不联网，无云端上传</div>
+        </div>
+        <div class="feature-item">
+            <div class="name">自动申请管理员</div>
+            <div class="desc">启动时自动提权，无需手动操作</div>
+        </div>
+    </div>
+
+    <!-- V4B 预告 -->
+    <div class="section-title" id="v4b">▸ V4B 计划中</div>
+    <div class="feature-grid">
+        <div class="feature-item">
+            <div class="name">脚本内容检测</div>
+            <div class="desc">JS / VBS / PS1 / BAT / CMD</div>
+        </div>
+        <div class="feature-item">
+            <div class="name">混淆识别</div>
+            <div class="desc">Base64 / 编码 / 高熵字符串</div>
+        </div>
+        <div class="feature-item">
+            <div class="name">紧急模式</div>
+            <div class="desc">FCBSS OS 全屏接管</div>
+        </div>
+        <div class="feature-item">
+            <div class="name">右键菜单</div>
+            <div class="desc">快速扫描集成</div>
+        </div>
+    </div>
+
+    <!-- 下载区 -->
+    <div class="download">
+        <div class="q">QQ群：1092973171</div>
+        <div class="hint">请在官方 QQ 群文件内下载最新版本</div>
+    </div>
+
+    <div class="footer">
+        FCBSS · 林子诺 · <a href="https://qm.qq.com/q/1092973171">QQ群 1092973171</a>
+    </div>
+
+</div>
+</body>
+</html>
