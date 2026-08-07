@@ -5,465 +5,406 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FCBSS - 极简原生安全守望者</title>
     <style>
-        /* 基础重置与排版 */
+        /* === 颜色变量 === */
         :root {
-            --color-primary: #0071e3;       /* 苹果蓝 */
-            --color-bg: #ffffff;
-            --color-bg-light: #f5f5f7;      /* 极浅灰 */
-            --color-text-main: #1d1d1f;     /* 近乎黑色 */
-            --color-text-sub: #86868b;      /* 中性灰 */
-            --color-border: #d2d2d7;        /* 浅灰边框 */
+            --color-primary: #0037ff;
+            --color-text-main: #1d1d1f;
+            --color-text-sub: #6e6e73;
+            --glass-bg: rgba(255, 255, 255, 0.35);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--color-bg);
             color: var(--color-text-main);
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
             height: 100vh;
             display: flex;
             flex-direction: column;
+            /* 动态蓝色晕染背景，低性能开销 */
+            background-color: #f5f8ff;
+            background-image: 
+                radial-gradient(ellipse at 20% 50%, rgba(0, 55, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(0, 55, 255, 0.10) 0%, transparent 40%),
+                radial-gradient(ellipse at 50% 80%, rgba(0, 55, 255, 0.08) 0%, transparent 45%);
+            background-size: 200% 200%;
+            animation: bgFloat 18s ease-in-out infinite alternate;
+            overflow: hidden;
         }
 
-        /* 导航栏 - 极简扁平 */
+        /* 背景缓慢浮动动画 */
+        @keyframes bgFloat {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+
+        /* === 液态玻璃导航栏 === */
         .navbar {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-            flex-shrink: 0;
-        }
-
-        .nav-container {
-            max-width: 980px;
-            margin: 0 auto;
+            position: sticky;
+            top: 20px;
+            margin: 0 24px;
+            padding: 12px 24px;
+            border-radius: 30px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 24px;
+            z-index: 100;
+            flex-shrink: 0;
         }
 
         .nav-logo {
             font-weight: 600;
-            font-size: 1.1rem;
-            letter-spacing: -0.5px;
+            font-size: 1.2rem;
+            letter-spacing: -1px;
+            background: var(--color-primary);
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 12px;
             cursor: default;
         }
 
         .nav-links {
             display: flex;
-            gap: 24px;
+            gap: 28px;
             list-style: none;
         }
 
         .nav-links a {
             font-size: 0.95rem;
             color: var(--color-text-sub);
-            transition: color 0.2s ease;
+            transition: all 0.3s ease;
             cursor: pointer;
+            text-decoration: none;
         }
 
-        .nav-links a:hover,
-        .nav-links a.active {
+        .nav-links a:hover, .nav-links a.active {
             color: var(--color-text-main);
         }
 
-        /* 内容容器 */
+        /* === 页面容器 === */
         .main-content {
             flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 30px;
         }
 
-        /* 页面切换区块 */
         .page {
             display: none;
-            max-width: 980px;
+            max-width: 750px;
             width: 100%;
-            padding: 40px 24px;
-            animation: fadeIn 0.3s ease-in-out;
+            animation: pageSwitch 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .page.active {
-            display: block;
+        .page.active { display: block; }
+
+        /* === 更丝滑的切换动画 === */
+        @keyframes pageSwitch {
+            0% { 
+                opacity: 0; 
+                transform: translateY(12px) scale(0.98); 
+                filter: blur(2px);
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+                filter: blur(0px);
+            }
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- 首页 Hero --- */
-        .hero-container {
+        /* === 液态玻璃卡片 === */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            padding: 40px;
+            box-shadow: var(--glass-shadow);
             text-align: center;
         }
 
-        .hero-logo-box {
-            width: 72px;
-            height: 72px;
-            background: var(--color-primary);
-            color: #fff;
-            font-weight: 600;
-            font-size: 1.4rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px auto;
-            border-radius: 16px;
+        .glass-card h2 {
+            font-size: 2.4rem;
+            font-weight: 500;
+            margin-bottom: 24px;
         }
 
-        .hero-title {
-            font-size: 3.2rem;
-            font-weight: 600;
-            letter-spacing: -1px;
-            margin-bottom: 16px;
-        }
-
-        .hero-subtitle {
-            font-size: 1.6rem;
+        .glass-card p {
             color: var(--color-text-sub);
-            margin-bottom: 32px;
-            font-weight: 400;
-        }
-
-        .hero-desc {
-            font-size: 1.1rem;
-            color: var(--color-text-sub);
-            max-width: 680px;
-            margin: 0 auto;
+            font-size: 1rem;
             line-height: 1.6;
         }
 
-        /* --- 介绍 --- */
-        .intro-container {
-            text-align: center;
+        /* === 首页 === */
+        .hero-logo-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 26px;
+            object-fit: contain;
+            margin: 0 auto 24px auto;
+            display: block;
+            box-shadow: 0 12px 40px rgba(0, 55, 255, 0.15);
         }
 
-        .intro-container h2 {
-            font-size: 2.4rem;
-            font-weight: 500;
-            margin-bottom: 48px;
+        .hero-title {
+            font-size: 2.8rem;
+            font-weight: 600;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
         }
 
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 48px;
-            text-align: left;
-            background: var(--color-bg-light);
-            padding: 40px;
-            border-radius: 20px;
-        }
-
-        .grid-item h3 {
-            font-size: 1.1rem;
-            font-weight: 500;
-            margin-bottom: 12px;
-        }
-
-        .grid-item p {
+        .hero-subtitle {
+            font-size: 1.4rem;
             color: var(--color-text-sub);
-            font-size: 0.95rem;
+            font-weight: 400;
+            margin-bottom: 20px;
         }
 
-        .intro-note {
-            margin-top: 24px;
+        .hero-desc {
+            font-size: 1rem;
             color: var(--color-text-sub);
-            font-size: 0.9rem;
-        }
-
-        /* --- 下载 --- */
-        .download-container {
-            text-align: left;
-            max-width: 440px;
-            width: 100%;
+            max-width: 500px;
             margin: 0 auto;
         }
 
-        .download-header {
-            text-align: center;
-            margin-bottom: 24px;
+        /* === 介绍网格 === */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            text-align: left;
+            margin-top: 10px;
+        }
+        .grid-item h3 { font-size: 1.1rem; margin-bottom: 6px; }
+        .grid-item p { font-size: 0.9rem; }
+
+        /* === 视频盒子 === */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0; overflow: hidden;
+            border-radius: 16px;
+            background: #000;
+            margin-top: 16px;
+        }
+        .video-wrapper iframe {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; border: 0;
         }
 
-        .download-version {
-            display: block;
-            font-size: 1.4rem;
-            font-weight: 500;
-            color: var(--color-text-main);
-            margin-bottom: 6px;
+        /* === 历史列表 === */
+        .history-box { text-align: left; }
+        .history-item {
+            display: flex; justify-content: space-between;
+            padding: 14px 0; border-bottom: 1px solid rgba(0,0,0,0.05);
         }
+        .history-item:last-child { border-bottom: none; }
+        .history-item .ver { font-weight: 500; }
+        .history-item .date { color: var(--color-text-sub); font-size: 0.85rem; }
 
-        .download-meta {
-            font-size: 0.9rem;
-            color: var(--color-text-sub);
-        }
-
-        .download-features {
-            background: var(--color-bg-light);
-            padding: 20px 24px;
-            border-radius: 12px;
-            margin-bottom: 28px;
-        }
-
-        .feature-item {
+        /* ==================== */
+        /*   ✅ 您重点关注的地方：新下载按钮  */
+        /* ==================== */
+        .download-container {
             display: flex;
+            flex-direction: column;
             align-items: center;
+            gap: 16px;
+        }
+
+        .download-info {
+            color: var(--color-text-sub);
             font-size: 0.95rem;
-            color: var(--color-text-main);
-            padding: 6px 0;
-        }
-
-        .feature-item:not(:last-child) {
-            margin-bottom: 4px;
-        }
-
-        .feature-line {
-            width: 3px;
-            height: 14px;
-            background: var(--color-primary);
-            margin-right: 12px;
-            border-radius: 2px;
-        }
-
-        .download-action {
-            text-align: center;
         }
 
         .btn-download {
+            /* 取消100%宽度，变成自适应大小 */
             display: inline-block;
-            background: var(--color-primary);
-            color: #fff;
-            border: none;
-            padding: 16px 0;
-            border-radius: 980px;
+            padding: 16px 48px; 
+            
+            /* 液态玻璃感，半透明+白背景 */
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            
+            /* 白边框，虚化阴影，营造高级感 */
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 60px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            
+            /* 文字颜色采用克莱因蓝 */
+            color: var(--color-primary);
             font-size: 1.1rem;
-            font-weight: 500;
+            font-weight: 600;
+            letter-spacing: 0.5px;
             cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-            width: 100%;
-            box-shadow: 0 2px 12px rgba(0, 113, 227, 0.15);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .btn-download:hover {
-            background: #0066d4;
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(0, 55, 255, 0.15);
         }
 
         .btn-download:active {
-            transform: scale(0.97);
+            transform: scale(0.95);
         }
+        /* ==================== */
 
-        .download-note {
-            margin-top: 14px;
-            font-size: 0.8rem;
-            color: var(--color-text-sub);
-        }
+        /* === 群聊 === */
+        .group-btn { margin-top: 10px; }
 
-        /* --- 群聊 --- */
-        .group-container {
-            text-align: center;
-        }
-
-        .group-container h2 {
-            font-size: 2.4rem;
-            font-weight: 500;
-            margin-bottom: 16px;
-        }
-
-        .group-container p {
-            color: var(--color-text-sub);
-            margin-bottom: 24px;
-        }
-
-        .group-btn {
-            display: inline-block;
-            background: #000;
-            color: #fff;
-            padding: 10px 28px;
-            border-radius: 980px;
-            font-size: 0.95rem;
-            border: none;
-            transition: background 0.2s;
-        }
-
-        .group-btn:hover {
-            background: #333;
-        }
-
-        /* 底部版权信息 */
+        /* === 底部 === */
         footer {
             text-align: center;
-            padding: 20px 24px;
+            padding: 20px;
             font-size: 0.8rem;
             color: var(--color-text-sub);
-            border-top: 1px solid rgba(0,0,0,0.04);
             flex-shrink: 0;
         }
 
-        /* 响应式适配 */
+        /* === 移动端适配 === */
         @media (max-width: 768px) {
-            .nav-links { gap: 16px; }
-            .nav-links a { font-size: 0.9rem; }
-            .nav-container { padding: 14px 16px; }
-            
-            .hero-title { font-size: 2.4rem; }
-            .hero-subtitle { font-size: 1.2rem; }
-            
-            .grid-3 { 
-                grid-template-columns: 1fr; 
-                gap: 32px; 
-                padding: 24px; 
-            }
-            
-            .download-card { padding: 32px 24px; }
-            
-            .page { padding: 20px 16px; }
+            .navbar { top: 12px; margin: 0 12px; padding: 10px 16px; flex-wrap: wrap; gap: 10px; }
+            .nav-links { gap: 16px; flex-wrap: wrap; justify-content: flex-end; }
+            .hero-title { font-size: 2.2rem; }
+            .grid-3 { grid-template-columns: 1fr; gap: 16px; }
+            .glass-card { padding: 24px; }
+            .page { padding: 12px; }
+            .btn-download { padding: 14px 32px; width: 100%; max-width: 300px; }
         }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">FCBSS</div>
-            <ul class="nav-links">
-                <li><a class="active" data-target="page-home">首页</a></li>
-                <li><a data-target="page-intro">介绍</a></li>
-                <li><a data-target="page-download">下载</a></li>
-                <li><a data-target="page-group">群聊</a></li>
-            </ul>
-        </div>
+        <div class="nav-logo">FC</div>
+        <ul class="nav-links">
+            <li><a class="active" data-target="page-home">首页</a></li>
+            <li><a data-target="page-intro">介绍</a></li>
+            <li><a data-target="page-history">历史</a></li>
+            <li><a data-target="page-media">视频</a></li>
+            <li><a data-target="page-download">下载</a></li>
+            <li><a data-target="page-group">群聊</a></li>
+        </ul>
     </nav>
 
     <div class="main-content">
 
         <!-- 1. 首页 -->
         <div id="page-home" class="page active">
-            <div class="hero-container">
-                <div class="hero-logo-box">FCBSS</div>
+            <div class="glass-card">
+                <img src="3.png" class="hero-logo-img" alt="FCBSS">
                 <h1 class="hero-title">纯净 · 可控 · 守望</h1>
                 <p class="hero-subtitle">轻量级原生安全辅助工具</p>
-                <p class="hero-desc">
-                    基于 C++98 与原生 Windows API 构建。<br>
-                    我们不宣称彻底防御，只做您最可靠的本地化环境监督者。
-                </p>
+                <p class="hero-desc">基于 C++98 与原生 Windows API 构建。</p>
             </div>
         </div>
 
         <!-- 2. 介绍 -->
         <div id="page-intro" class="page">
-            <div class="intro-container">
+            <div class="glass-card">
                 <h2>核心理念</h2>
                 <div class="grid-3">
-                    <div class="grid-item">
-                        <h3>行为监督</h3>
-                        <p>纯原生底层扫描，提供精准的本地特征比对与系统环境变化提醒，无感运行。</p>
-                    </div>
-                    <div class="grid-item">
-                        <h3>极致轻量</h3>
-                        <p>安装包仅 2MB 左右，极低内存占用。无需复杂安装，解压即用，绝对纯净无捆绑。</p>
-                    </div>
-                    <div class="grid-item">
-                        <h3>极客本色</h3>
-                        <p>完全由 Dev-C++ 5.11 + C++98 语法打造，直接调用 Windows.h 原生 API，掌控底层。</p>
-                    </div>
+                    <div class="grid-item"><h3>行为监督</h3><p>纯原生底层扫描，本地特征比对与环境提醒。</p></div>
+                    <div class="grid-item"><h3>极致轻量</h3><p>仅 2MB，解压即用，纯净无捆绑。</p></div>
+                    <div class="grid-item"><h3>极客本色</h3><p>由 Dev-C++ 5.11 直接调用 Windows.h 原生 API。</p></div>
                 </div>
-                <p class="intro-note">建议配合主流安全软件组成多层防护，FCBSS 为有力补充。</p>
             </div>
         </div>
 
-        <!-- 3. 下载 (指向 FCBSS_v0.5.0.zip) -->
+        <!-- 3. 历史版本 -->
+        <div id="page-history" class="page">
+            <div class="glass-card">
+                <h2>版本历史</h2>
+                <div class="history-box">
+                    <div class="history-item"><span class="ver">v0.5.0</span><span class="date">2026-08-05</span></div>
+                    <div style="text-align:center; margin-top:16px; font-size:0.9rem; color:var(--color-text-sub);">更多版本研发中...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. 视频 -->
+        <div id="page-media" class="page">
+            <div class="glass-card">
+                <h2>宣传视频</h2>
+                <div class="video-wrapper">
+                    <!-- 替换 bvid 为您的真实 B站视频 ID -->
+                    <iframe src="//player.bilibili.com/player.html?bvid=BV1GJ411x7e7&page=1&autoplay=0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. 下载 (全新按钮样式) -->
         <div id="page-download" class="page">
-            <div class="download-container">
+            <div class="glass-card">
+                <h2 style="margin-bottom: 8px;">v0.5.0</h2>
+                <div class="download-info">ZIP 压缩包 · 纯净无捆绑</div>
                 
-                <div class="download-header">
-                    <span class="download-version">当前版本 v0.5.0</span>
-                    <div class="download-meta">
-                        <span>ZIP 压缩包</span> · <span>主程序 + 病毒库</span>
-                    </div>
+                <div class="download-container" style="margin-top: 24px;">
+                    <button class="btn-download" onclick="triggerDownload()">下载 FCBSS 压缩包</button>
                 </div>
-
-                <div class="download-features">
-                    <div class="feature-item">
-                        <div class="feature-line"></div>
-                        <span>原生 C++98 开发，极低资源占用</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-line"></div>
-                        <span>解压即用，无需安装，纯净无捆绑</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-line"></div>
-                        <span>包含完整本地病毒库文件</span>
-                    </div>
-                </div>
-
-                <div class="download-action">
-                    <button class="btn-download" onclick="triggerDownload()">
-                        下载 FCBSS 压缩包
-                    </button>
-                    <p class="download-note">
-                        文件下载后请解压运行 &nbsp;·&nbsp; 更新日期：2026-08-07
-                    </p>
-                </div>
-
             </div>
         </div>
 
-        <!-- 4. 群聊 -->
+        <!-- 6. 群聊 -->
         <div id="page-group" class="page">
-            <div class="group-container">
-                <h2>交流群组 QQ 1092973171</h2>
-                <p>获取最新版本、反馈问题、参与功能讨论。</p>
-                               
-                <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=rW5fA-EGDfQ5eTGfxyHAYBPcH62MkDlv&jump_from=webapi&authKey=JnclbL3JlIo0yq68aGu7ri5ddR8Udkgeg59oCXlTzmsm9KMiXcHTiiKoCYMFo8sJ"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="FCBSS安全软件·Foundation " title="FCBSS安全软件·Foundation "></a>
+            <div class="glass-card">
+                <h2>交流群组</h2>
+                <p style="margin-bottom: 16px;">获取最新版本，反馈问题。</p>
+                <div class="group-btn">
+                    <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=rW5fA-EGDfQ5eTGfxyHAYBPcH62MkDlv&jump_from=webapi&authKey=JnclbL3JlIo0yq68aGu7ri5ddR8Udkgeg59oCXlTzmsm9KMiXcHTiiKoCYMFo8sJ">
+                        <img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="FCBSS群聊">
+                    </a>
+                </div>
             </div>
         </div>
 
     </div>
 
     <footer>
-        <p>FCBSS 安全软件 &copy; 2026 林子语 · 仅供个人学习研究使用</p>
+        <p>FCBSS 安全软件 &copy; 2026 · 仅供个人学习研究</p>
     </footer>
 
-    <!-- 核心交互脚本 -->
     <script>
-        // 1. 切换页面功能
+        // === 切换页面功能（配合丝滑动画） ===
         const navLinks = document.querySelectorAll('.nav-links a');
         const pages = document.querySelectorAll('.page');
 
         navLinks.forEach(link => {
             link.addEventListener('click', function() {
+                // 移除所有的 active
                 navLinks.forEach(nav => nav.classList.remove('active'));
                 pages.forEach(page => page.classList.remove('active'));
-
+                
+                // 给当前的加上 active
                 this.classList.add('active');
                 const targetId = this.getAttribute('data-target');
-                const targetPage = document.getElementById(targetId);
-                if (targetPage) {
-                    targetPage.classList.add('active');
-                }
+                document.getElementById(targetId).classList.add('active');
             });
         });
 
-        // 2. 下载功能逻辑 (指向 FCBSS.zip 防缓存)
+        // === 下载 ===
         function triggerDownload() {
-            // 指向您在 GitHub 根目录上传的 ZIP 压缩包
-            const baseUrl = 'https://fcbss.netlify.app/FCBSS.zip';
-            
-            // 添加时间戳，强制浏览器下载最新版本，防止 CDN 缓存
+            // 请替换为您最终的 GitHub 或 Netlify 下载直链
+            const baseUrl = 'https://fcbss.netlify.app/FCBSS_v0.5.0.zip'; 
             const downloadUrl = baseUrl + '?t=' + new Date().getTime();
             
             const link = document.createElement('a');
             link.href = downloadUrl;
-            link.download = 'FCBSS.zip'; // 用户下载后保存的文件名
+            link.download = 'FCBSS_v0.5.0.zip';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
