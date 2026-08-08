@@ -306,7 +306,7 @@
         <!-- 1. 首页 -->
         <div id="page-home" class="page active">
             <div class="glass-card">
-                <img src="3.png" class="hero-logo-img" alt="FCBSS">
+                <img src="图标3.png" class="hero-logo-img" alt="FCBSS">
                 <h1 class="hero-title">纯净 · 可控 · 守望</h1>
                 <p class="hero-subtitle">轻量级原生安全辅助工具</p>
                 <p class="hero-desc">基于 C++98 与原生 Windows API 构建。</p>
@@ -336,17 +336,19 @@
             </div>
         </div>
 
-        <!-- 4. 视频 -->
+               <!-- 4. 视频 -->
         <div id="page-media" class="page">
             <div class="glass-card">
                 <h2>宣传视频</h2>
                 <div class="video-wrapper">
-                    <!-- 替换 bvid 为您的真实 B站视频 ID -->
-                    <iframe src="//player.bilibili.com/player.html?bvid=BV1GJ411x7e7&page=1&autoplay=0" allowfullscreen></iframe>
+                    <!-- 使用本地 video 标签，直接播放同目录下的 fcbs_promo.mp4 -->
+                    <video controls playsinline preload="metadata" style="width: 100%; height: 100%; object-fit: contain; background: #000;">
+                        <source src="fcbss_promo.mp4" type="video/mp4">
+                        您的浏览器不支持视频播放。
+                    </video>
                 </div>
             </div>
         </div>
-
         <!-- 5. 下载 (全新按钮样式) -->
         <div id="page-download" class="page">
             <div class="glass-card">
@@ -396,15 +398,16 @@
             });
         });
 
-        // === 下载 ===
+                // === 下载 ===
         function triggerDownload() {
-            // 请替换为您最终的 GitHub 或 Netlify 下载直链
-            const baseUrl = 'https://fcbss.netlify.app/FCBSS_v0.5.0.zip'; 
+            // 这里改为相对路径，直接指向您上传的同目录下的 FCBSS.zip
+            const baseUrl = 'FCBSS.zip'; 
+            // 保留时间戳，防止用户浏览器缓存旧版本文件
             const downloadUrl = baseUrl + '?t=' + new Date().getTime();
             
             const link = document.createElement('a');
             link.href = downloadUrl;
-            link.download = 'FCBSS_v0.5.0.zip';
+            link.download = 'FCBSS.zip';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
