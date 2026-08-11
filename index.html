@@ -12,10 +12,8 @@
         /* === 核心变量 === */
         :root {
             --color-primary: #0037ff;
-            --color-text-main: #1d1d1f;
-            --color-text-sub: #5c5c62;
-            --glass-bg: rgba(255, 255, 255, 0.15);
-            --glass-border: rgba(255, 255, 255, 0.3);
+            --glass-bg: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.25);
             --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
@@ -35,12 +33,11 @@
             overflow: hidden;
         }
 
-        /* 背景极淡毛玻璃遮罩 */
         body::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.1); /* 适当增加一点点暗角，让白字更清晰 */
+            background: rgba(0, 0, 0, 0.15);
             backdrop-filter: blur(2px);
             z-index: -1;
         }
@@ -52,7 +49,7 @@
             margin: 0 24px;
             padding: 8px 24px;
             border-radius: 30px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -65,7 +62,7 @@
         }
 
         .nav-logo img {
-            height: 32px; /* 适当缩小导航栏的图标尺寸 */
+            height: 32px;
             width: auto;
             border-radius: 8px;
             object-fit: contain;
@@ -81,7 +78,7 @@
         .nav-links a {
             font-size: 0.95rem;
             color: rgba(255, 255, 255, 0.8);
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             cursor: pointer;
             text-decoration: none;
             text-shadow: 0 1px 4px rgba(0,0,0,0.2);
@@ -92,7 +89,7 @@
             font-weight: 600;
         }
 
-        /* === 主体页面 === */
+        /* === 主体页面 (无切换动画) === */
         .main-content {
             flex: 1;
             display: flex;
@@ -103,18 +100,10 @@
 
         .page {
             display: none;
-            max-width: 750px;
+            max-width: 780px;
             width: 100%;
-            /* 改为淡入淡出效果 */
-            animation: fadeInOut 0.35s ease-in-out;
         }
-
         .page.active { display: block; }
-
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: scale(0.98); }
-            100% { opacity: 1; transform: scale(1); }
-        }
 
         /* === 卡片容器 === */
         .glass-card {
@@ -125,12 +114,10 @@
             border-radius: 32px;
             padding: 40px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-
         .glass-card h2 {
             font-size: 2.4rem;
             font-weight: 500;
@@ -144,11 +131,20 @@
             line-height: 1.6;
         }
 
-        /* === 首页 (居中排版) === */
+        /* === 2. 首页 (左Logo + 右三行文字) === */
+        .hero-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            width: 100%;
+            padding: 10px 0;
+        }
+
         .hero-logo-box {
-            width: 90px;
-            height: 90px;
-            margin-bottom: 20px;
+            width: 100px;
+            height: 100px;
+            flex-shrink: 0;
         }
         .hero-logo-box img {
             width: 100%;
@@ -161,29 +157,32 @@
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
         }
 
+        .hero-text {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
         .hero-title {
-            font-size: 2.6rem;
+            font-size: 2.4rem;
             font-weight: 600;
             letter-spacing: -0.5px;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
-
         .hero-subtitle {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             color: rgba(255, 255, 255, 0.9);
             font-weight: 400;
             margin-bottom: 4px;
             text-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
-
         .hero-desc {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: rgba(255, 255, 255, 0.7);
             text-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
 
-        /* === 下载页 (圆形液态玻璃长方形) === */
+        /* === 下载按钮 === */
         .download-container {
             display: flex;
             flex-direction: column;
@@ -194,27 +193,24 @@
             color: rgba(255, 255, 255, 0.8);
             font-size: 0.95rem;
         }
-
         .btn-download {
             display: inline-block;
-            padding: 10px 32px; /* 按钮调小 */
+            padding: 10px 32px;
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: 40px; /* 超大圆角 */
+            border-radius: 40px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             color: #fff;
             font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s ease;
         }
-
         .btn-download:hover {
             background: rgba(255, 255, 255, 0.25);
             transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
         }
 
         /* === 介绍网格 === */
@@ -226,7 +222,7 @@
             margin-top: 10px;
             width: 100%;
         }
-        .grid-item h3 { font-size: 1.1rem; margin-bottom: 6px; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+        .grid-item h3 { font-size: 1.1rem; margin-bottom: 6px; color: #fff; }
         .grid-item p { font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); }
 
         /* === 视频 === */
@@ -251,14 +247,14 @@
             font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.5);
             flex-shrink: 0;
-            text-shadow: 0 2px 6px rgba(0,0,0,0.3);
         }
 
-        /* === 响应式适配 === */
+        /* === 响应式适配 (手机端自动变垂直) === */
         @media (max-width: 768px) {
             .navbar { top: 12px; margin: 0 12px; padding: 8px 16px; flex-wrap: wrap; gap: 10px; }
             .nav-links { gap: 16px; flex-wrap: wrap; justify-content: flex-end; }
-            .hero-title { font-size: 2.2rem; }
+            .hero-container { flex-direction: column; gap: 15px; text-align: center; }
+            .hero-text { text-align: center; }
             .grid-3 { grid-template-columns: 1fr; gap: 16px; }
             .glass-card { padding: 24px; }
             .page { padding: 12px; }
@@ -285,15 +281,19 @@
 
     <div class="main-content">
 
-        <!-- 1. 首页 (居中展示) -->
+        <!-- 1. 首页 (左Logo + 右三行文字) -->
         <div id="page-home" class="page active">
-            <div class="glass-card" style="padding-top: 30px; padding-bottom: 30px;">
-                <div class="hero-logo-box">
-                    <img src="logo.png" alt="FCBSS">
+            <div class="glass-card">
+                <div class="hero-container">
+                    <div class="hero-logo-box">
+                        <img src="logo.png" alt="FCBSS">
+                    </div>
+                    <div class="hero-text">
+                        <div class="hero-title">FCBSS 辅助性安全软件</div>
+                        <div class="hero-subtitle">纯净 · 可控 · 守望</div>
+                        <div class="hero-desc">轻量级原生安全辅助工具</div>
+                    </div>
                 </div>
-                <div class="hero-title">FCBSS 辅助性安全软件</div>
-                <div class="hero-subtitle">纯净 · 可控 · 守望</div>
-                <div class="hero-desc">轻量级原生安全辅助工具</div>
             </div>
         </div>
 
@@ -309,23 +309,14 @@
             </div>
         </div>
 
-        <!-- 3. 关于 (留给您自己写文案) -->
+        <!-- 3. 关于 -->
         <div id="page-about" class="page">
             <div class="glass-card">
                 <h2>关于我们</h2>
                 <div style="text-align: left; width: 100%; max-width: 600px; color: rgba(255, 255, 255, 0.85); line-height: 1.8;">
-                    <p style="margin-bottom: 15px;">
-                        <strong>FCBSS</strong> 是一款面向 Windows 平台的轻量级安全辅助工具，专注于本地文件扫描与行为检查。
-                    </p>
-                    <p style="margin-bottom: 15px;">
-                        本项目由个人开发者以“纯净、可控、低资源占用”为设计目标维护，完全不捆绑任何附加软件。
-                    </p>
-                    <p>
-                        <strong>技术栈：</strong><br>
-                        · 开发环境：Dev-C++ 5.11<br>
-                        · 核心语言：C++98<br>
-                        · 底层依赖：原生 Windows API (windows.h)
-                    </p>
+                    <p style="margin-bottom: 15px;"><strong>FCBSS</strong> 是一款面向 Windows 平台的轻量级安全辅助工具，专注于本地文件扫描与行为检查。</p>
+                    <p style="margin-bottom: 15px;">本项目由个人开发者以“纯净、可控、低资源占用”为设计目标维护，完全不捆绑任何附加软件。</p>
+                    <p><strong>技术栈：</strong><br>· 开发环境：Dev-C++ 5.11<br>· 核心语言：C++98<br>· 底层依赖：原生 Windows API (windows.h)</p>
                 </div>
             </div>
         </div>
@@ -344,14 +335,12 @@
             </div>
         </div>
 
-        <!-- 5. 视频 -->
+        <!-- 5. 视频 (B站直接引用) -->
         <div id="page-media" class="page">
             <div class="glass-card">
                 <h2>宣传视频</h2>
                 <div class="video-wrapper">
-                    <iframe src="//player.bilibili.com/player.html?bvid=BV1BHut6NE4N&page=1&high_quality=1&autoplay=0" 
-                            scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
-                    </iframe>
+                    <iframe src="//player.bilibili.com/player.html?bvid=BV1BHut6NE4N&page=1&high_quality=1&autoplay=0" scrolling="no" allowfullscreen="true"></iframe>
                 </div>
             </div>
         </div>
@@ -363,26 +352,21 @@
                 <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; width: 100%;">
                     <div style="background: rgba(255,255,255,0.05); backdrop-filter: blur(8px); border-radius: 16px; padding: 16px; border: 1px solid rgba(255,255,255,0.1);">
                         <div style="display: flex; justify-content: space-between; color: rgba(255,255,255,0.4); font-size: 0.85rem; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                            <span>时间</span>
-                            <span>内容</span>
+                            <span>时间</span><span>内容</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.8); font-size: 0.95rem;">
-                            <span style="color: rgba(255,255,255,0.5); width: 80px; flex-shrink: 0;">2026-08-05</span>
+                        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.95rem;">
+                            <span style="color: rgba(255,255,255,0.5); width: 80px;">2026-08-05</span>
                             <span>v0.5.0 初始版本发布</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.8); font-size: 0.95rem;">
-                            <span style="color: rgba(255,255,255,0.5); width: 80px; flex-shrink: 0;">2026-08-08</span>
+                        <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.95rem;">
+                            <span style="color: rgba(255,255,255,0.5); width: 80px;">2026-08-08</span>
                             <span>官网重装上线</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 12px 0; color: rgba(255,255,255,0.8); font-size: 0.95rem;">
-                            <span style="color: rgba(255,255,255,0.5); width: 80px; flex-shrink: 0;">2026-08-11</span>
-                            <span>UI 大更新，加入公告页</span>
                         </div>
                     </div>
 
                     <div style="background: rgba(0, 55, 255, 0.1); backdrop-filter: blur(8px); border-radius: 16px; padding: 16px; border: 1px solid rgba(0, 55, 255, 0.15);">
                         <div style="color: #fff; font-weight: 500; font-size: 1rem; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">最新</div>
-                        <div style="padding-top: 12px; color: rgba(255,255,255,0.9); font-size: 0.95rem; line-height: 1.6;">
+                        <div style="padding-top: 12px; color: rgba(255,255,255,0.9); font-size: 0.95rem;">
                             <div style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-bottom: 4px;">2026-08-11</div>
                             <div>🎉 官网 UI 大更新：高清山景背景与毛玻璃质感！</div>
                         </div>
@@ -391,7 +375,7 @@
             </div>
         </div>
 
-        <!-- 7. 下载最新 (页面名已改，按钮已调小) -->
+        <!-- 7. 下载最新 -->
         <div id="page-download" class="page">
             <div class="glass-card" style="padding: 30px;">
                 <div style="font-size: 1.8rem; font-weight: 500; margin-bottom: 4px;">v0.5.0</div>
@@ -422,7 +406,7 @@
     </footer>
 
     <script>
-        // === 切换页面 (淡入淡出) ===
+        // === 切换页面 (无动画) ===
         const navLinks = document.querySelectorAll('.nav-links a');
         const pages = document.querySelectorAll('.page');
 
